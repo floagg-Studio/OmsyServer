@@ -1,0 +1,178 @@
+{
+	"mysql": {
+		"sh": "${root_path}/src/services/mysql.sh",
+		"label": "MySQL / MariaDB",
+		"bins": [
+			"mysqld",
+			"mariadbd",
+			"mysql"
+		],
+		"start": [
+			"${root_path}/sys/bin/mysqld",
+			"--defaults-file=${root_path}/share/config/mysql/my.cnf",
+			"--user=$USER"
+		],
+		"stop": [
+			[
+				"pkill",
+				"-TERM",
+				"mysqld_safe"
+			],
+			[
+				"${root_path}/sys/bin/mysqladmin",
+				"--socket=${root_path}/share/run/mysql.sock",
+				"-u",
+				"root",
+				"shutdown"
+			]
+		]
+	},
+	"openssl": {
+		"sh": "${root_path}/src/services/openssl.sh",
+		"label": "OpenSSL",
+		"bins": [
+			"openssl"
+		]
+	},
+	"nodejs": {
+		"sh": "${root_path}/src/services/nodejs.sh",
+		"label": "NodeJS",
+		"bins": [
+			"node"
+		]
+	},
+	"apache": {
+		"sh": "${root_path}/src/services/apache.sh",
+		"label": "Apache",
+		"bins": [
+			"apache2",
+			"httpd"
+		],
+		"start": [
+			"${root_path}/sys/bin/apachectl",
+			"-f",
+			"${root_path}/share/config/apache/httpd.conf",
+			"-k",
+			"start"
+		],
+		"stop": [
+			[
+				"${root_path}/sys/bin/apachectl",
+				"-f",
+				"${root_path}/share/config/apache/httpd.conf",
+				"-k",
+				"stop"
+			]
+		]
+	},
+	"nginx": {
+		"sh": "${root_path}/src/services/nginx.sh",
+		"label": "Nginx",
+		"bins": [
+			"nginx"
+		],
+		"start": [
+			"${root_path}/sys/bin/nginx",
+			"-c",
+			"${root_path}/share/config/nginx/nginx.conf"
+		],
+		"stop": [
+			[
+				"kill",
+				"-QUIT",
+				"$(cat ${root_path}/share/run/nginx.pid)"
+			]
+		]
+	},
+	"redis": {
+		"sh": "${root_path}/src/services/redis.sh",
+		"label": "Redis",
+		"bins": [
+			"redis-server",
+			"redis"
+		],
+		"start": [
+			"${root_path}/sys/bin/redis-server",
+			"${root_path}/share/config/redis/redis.conf",
+			"--daemonize",
+			"no"
+		],
+		"stop": [
+			[
+				"${root_path}/sys/bin/redis-cli",
+				"shutdown"
+			]
+		]
+	},
+	"phpfpm85": {
+		"sh": "${root_path}/src/services/php85.sh",
+		"label": "PHP-FPM85",
+		"bins": [
+			"php-fpm",
+			"php-fpm85",
+			"php7.4-fpm",
+			"php8.1-fpm",
+			"php8.2-fpm",
+			"php8.3-fpm"
+		],
+		"start": [
+			"${root_path}/sys/bin/php-fpm85",
+			"--fpm-config",
+			"${root_path}/share/config/php/php-fpm85.conf"
+		],
+		"stop": [
+			[
+				"kill",
+				"$(cat ${root_path}/share/run/php-fpm85.pid)"
+			]
+		]
+	},
+	"postgresql": {
+		"sh": "${root_path}/src/services/postgresql.sh",
+		"label": "PostgreSQL",
+		"bins": [
+			"postgres",
+			"postgresql"
+		],
+		"start": [],
+		"stop": []
+	},
+	"docker": {
+		"sh": "${root_path}/src/services/docker.sh",
+		"label": "Docker",
+		"bins": [
+			"dockerd",
+			"docker"
+		],
+		"start": [],
+		"stop": []
+	},
+	"ssh": {
+		"sh": "${root_path}/src/services/openssh.sh",
+		"label": "SSH",
+		"bins": [
+			"sshd",
+			"ssh"
+		],
+		"start": [],
+		"stop": []
+	},
+	"vsftpd": {
+		"sh": "${root_path}/src/services/vsftpd.sh",
+		"label": "vsftpd",
+		"bins": [
+			"vsftpd"
+		],
+		"start": [
+			"${root_path}/sys/bin/vsftpd",
+			"${root_path}/share/config/vsftpd/vsftpd.conf"
+		],
+		"stop": [
+			[
+				"pkill",
+				"-TERM",
+				"vsftpd"
+			]
+		]
+	}
+}
