@@ -11,9 +11,10 @@ def run(cmd, wait=False):
 	# Les commandes du JSON contenant $(...) ont besoin d'un shell
 	shell = any("$(" in a for a in cmd)
 	cmd = " ".join(cmd) if shell else cmd
+	print(cmd)
 	p = subprocess.Popen(cmd, shell=shell, stdin=subprocess.DEVNULL,
-						 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-						 start_new_session=True, cwd=BIN)
+		stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+		start_new_session=True, cwd=BIN)
 	if wait:
 		p.wait()
 
