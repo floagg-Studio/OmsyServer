@@ -1,12 +1,14 @@
+**English** | [Français](README.fr.md)
+
 # OmsyServer
 
-Un serveur local complet (Nginx, Apache, PHP, MySQL, Redis…) **installé et piloté depuis un seul dossier**, sans toucher aux services du système.
+A complete local server stack (Nginx, Apache, PHP, MySQL, Redis…) **installed and managed from a single folder**, without touching the system's own services.
 
-> ⚠️ Projet en développement : certaines parties sont encore incomplètes.
+> ⚠️ Work in progress: some parts are still incomplete.
 
-## Systèmes supportés
+## Supported systems
 
-- macOS (Apple Silicon, avec Homebrew)
+- macOS (Apple Silicon, with Homebrew)
 - Ubuntu
 
 ## Installation
@@ -16,21 +18,21 @@ git clone https://github.com/floagg-studio/OmsyServer.git
 cd OmsyServer
 ```
 
-1. Dans `source/common.sh`, remplacez `PATH_ROOT` par le chemin de votre dossier.
-2. Lancez l'installation :
+1. In `source/common.sh`, set `PATH_ROOT` to the path of your folder.
+2. Run the installation:
    ```bash
    sudo bash omsy-stable.sh
    ```
 
-Le script installe, dans l'ordre : les dépendances, OpenSSL, MySQL 8.4, Redis 7.2, Nginx 1.28, Apache 2.4 et PHP 8.5.
+The script installs, in order: dependencies, OpenSSL, MySQL 8.4, Redis 7.2, Nginx 1.28, Apache 2.4 and PHP 8.5.
 
-Nginx reçoit les requêtes (ports 80 et 443) et les transmet à Apache (port 8080), qui passe les fichiers PHP à PHP-FPM.
+Nginx receives requests (ports 80 and 443) and forwards them to Apache (port 8080), which hands PHP files to PHP-FPM.
 
-## Utilisation
+## Usage
 
-Deux outils, tous deux configurés par `share/omsyctl/omsy.conf`.
+Two tools, both configured through `share/omsyctl/omsy.conf`.
 
-### `omsyctl` : gérer les services
+### `omsyctl`: manage services
 
 ```bash
 omsyctl -c share/omsyctl/omsy.conf start  mysql nginx
@@ -38,45 +40,49 @@ omsyctl -c share/omsyctl/omsy.conf stop   mysql nginx
 omsyctl -c share/omsyctl/omsy.conf status mysql nginx
 ```
 
-Services disponibles : `mysql`, `redis`, `nginx`, `apache`, `phpfpm85`.
+Available services: `mysql`, `redis`, `nginx`, `apache`, `phpfpm85`.
 
-### `omsyd` : le démon
+### `omsyd`: the daemon
 
-Écoute sur le port **8990** et se relance automatiquement en cas de plantage.
+Listens on port **8990** and restarts itself automatically if it crashes.
 
 ```bash
-omsyd -c share/omsyctl/omsy.conf start    # lance en arrière-plan
+omsyd -c share/omsyctl/omsy.conf start    # run in the background
 omsyd -c share/omsyctl/omsy.conf stop
 omsyd -c share/omsyctl/omsy.conf status
-omsyd -c share/omsyctl/omsy.conf run      # lance au premier plan
+omsyd -c share/omsyctl/omsy.conf run      # run in the foreground
 ```
 
-Sans commande, `omsyd` bascule entre démarrage et arrêt.
+With no command, `omsyd` toggles between start and stop.
 
-## Avertissement
+## Contributing
 
-Les scripts modifient votre système. Lisez-les avant de les lancer et testez-les d'abord sur une machine virtuelle.
+Contributions are welcome: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-### Hors du dossier du projet
+## Warning
 
-- **Paquets :** installation de nombreux paquets via Homebrew (macOS) ou `apt` (Ubuntu). Sur macOS, Homebrew est installé s'il est absent.
-- **Utilisateur :** création de l'utilisateur et du groupe système `omsy`.
-- **Lien :** `/usr/local/bin/omsy-openssl` pointe vers l'OpenSSL d'Omsy.
-- **Ubuntu uniquement :** création de fichiers dans `/etc/ld.so.conf.d/` (`omsy-openssl.conf`, `omsy-mysql.conf`, `omsy-apache.conf`, `omsy-extra.conf` et un fichier pour pcre2), puis exécution de `ldconfig`.
+These scripts modify your system. Read them before running them, and test them on a virtual machine first.
 
-### Dans le dossier du projet
+### Outside the project folder
 
-- **Droits :** `chown -R omsy:omsy` et `chmod -R 755` sur tout le dossier.
-- **Scripts :** les fichiers `.sh` sont réécrits (remplacement de `PATH_ROOT`).
-- **Arborescence créée :** `source/` (sources téléchargées), `sys/` (binaires, bibliothèques, modules), `share/` (config, logs, run, data, ssl) et `usr/` (sites web).
-- **Certificats :** deux certificats auto-signés (`defaults` et `omsy-sql`), valables 10 ans, avec une copie des certificats CA du système dans `share/config/openssl/cert.pem`.
-- **Mots de passe :** un mot de passe root MySQL aléatoire (`share/config/mysql/.mysql_root_pass`) et un mot de passe Redis aléatoire (`share/config/redis/redis_password.txt`).
-- **Base de données MySQL :** initialisation de `share/data`, suppression des utilisateurs anonymes et de la base `test`, création de la base `phpmyadmin`.
-- **Configurations générées :** `my.cnf`, `redis.conf`, `nginx.conf`, `httpd.conf`, les sites `default.com` (Nginx et Apache), `php85.ini`, `php-fpm85.conf` et les fichiers `share/config/omsyctl/*.conf`.
-- **PHP :** `sys/bin/php` et `sys/bin/php-fpm` deviennent des liens vers `php85` et `php-fpm85`, et l'extension Redis est compilée.
-- **Site par défaut :** `usr/default.com/public/index.php` affiche `phpinfo()`. Supprimez-le avant toute mise en ligne.
-- **macOS uniquement :** modification des chemins des bibliothèques dans les exécutables MySQL (`install_name_tool`) et copie des bibliothèques OpenSSL dans `sys/lib`.
+- **Packages:** installs many packages through Homebrew (macOS) or `apt` (Ubuntu). On macOS, Homebrew itself is installed if missing.
+- **User:** creates the `omsy` system user and group.
+- **Link:** `/usr/local/bin/omsy-openssl` points to Omsy's OpenSSL.
+- **Ubuntu only:** creates files in `/etc/ld.so.conf.d/` (`omsy-openssl.conf`, `omsy-mysql.conf`, `omsy-apache.conf`, `omsy-extra.conf` and one for pcre2), then runs `ldconfig`.
 
-### Ports utilisés
+### Inside the project folder
 
-80, 443 (Nginx), 8080 et 8880 (Apache), 3306 (MySQL, local), 6379 (Redis, local), 8990 (`omsyd`).
+- **Permissions:** `chown -R omsy:omsy` and `chmod -R 755` on the whole folder.
+- **Scripts:** the `.sh` files are rewritten (`PATH_ROOT` replacement).
+- **Folders created:** `source/` (downloaded sources), `sys/` (binaries, libraries, modules), `share/` (config, logs, run, data, ssl) and `usr/` (websites).
+- **Certificates:** two self-signed certificates (`defaults` and `omsy-sql`), valid for 10 years, plus a copy of the system CA certificates in `share/config/openssl/cert.pem`.
+- **Passwords:** a random MySQL root password (`share/config/mysql/.mysql_root_pass`) and a random Redis password (`share/config/redis/redis_password.txt`).
+- **MySQL database:** initializes `share/data`, removes anonymous users and the `test` database, and creates the `phpmyadmin` database.
+- **Generated configuration:** `my.cnf`, `redis.conf`, `nginx.conf`, `httpd.conf`, the `default.com` sites (Nginx and Apache), `php85.ini`, `php-fpm85.conf` and the `share/config/omsyctl/*.conf` files.
+- **PHP:** `sys/bin/php` and `sys/bin/php-fpm` become links to `php85` and `php-fpm85`, and the Redis extension is compiled.
+- **Default site:** `usr/default.com/public/index.php` displays `phpinfo()`. Delete it before going public.
+- **macOS only:** rewrites library paths in the MySQL executables (`install_name_tool`) and copies the OpenSSL libraries into `sys/lib`.
+
+### Ports used
+
+80, 443 (Nginx), 8080 and 8880 (Apache), 3306 (MySQL, local), 6379 (Redis, local), 8990 (`omsyd`).
