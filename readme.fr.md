@@ -86,3 +86,6 @@ Les scripts modifient votre système. Lisez-les avant de les lancer et testez-le
 ## Contribuer
 
 Les contributions sont les bienvenues : voir [CONTRIBUTING.fr.md](CONTRIBUTING.fr.md).
+
+
+# Canary 
