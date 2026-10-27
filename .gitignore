@@ -1,16 +1,24 @@
 # Omsy Folder & Compilation
-sys
-share
-usr
+sys/*/
+!sys/lib/
+sys/lib/apache
+sys/lib/mysql
+sys/lib/mysqlrouter
+sys/lib/nginx
+sys/lib/openssl
+sys/lib/php
+sys/lib/pkgconfig
+sys/lib/private
+!sys/lib/omsy/
+!sys/lib/omsy/**
+!sys/omsy/
+!sys/omsy/**
 
-# Compilation
-# usr/build/
-# usr/cgi-bin/
-# usr/error/
-# usr/default.com/
-# usr/htdocs/
-# usr/icons/
-# usr/manual/
+share/
+
+usr/*/
+!usr/webinterface/
+!usr/webinterface/**
 
 # SOURCE
 source/*.tar.gz
@@ -20,5 +28,13 @@ source/omsyCtl/listen.c
 source/omsyCtl/main.c
 source/omsyCtl/conf.c
 
-# SYSTEME MACOS
+# Système macOS
 .DS_Store
+*.dylib
+sys/mysqlrouter-log-rotate
+sys/README
+sys/README-test
+sys/README.router
+sys/LICENSE
+sys/LICENSE-test
+sys/LICENSE.router
