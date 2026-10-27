@@ -1,5 +1,24 @@
-.DS_Store
+# Omsy Folder & Compilation
 sys
 share
 usr
-source
+
+# Compilation
+# usr/build/
+# usr/cgi-bin/
+# usr/error/
+# usr/default.com/
+# usr/htdocs/
+# usr/icons/
+# usr/manual/
+
+# SOURCE
+source/*.tar.gz
+source/*.tgz
+source/omsyCtl/include/conf.h
+source/omsyCtl/listen.c
+source/omsyCtl/main.c
+source/omsyCtl/conf.c
+
+# SYSTEME MACOS
+.DS_Store
