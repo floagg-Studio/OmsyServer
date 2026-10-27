@@ -11,6 +11,10 @@ sys/lib/pkgconfig
 sys/lib/private
 !sys/lib/omsy/
 !sys/lib/omsy/**
+!sys/include/
+sys/include/*/
+sys/include/*.h
+!sys/include/omsy/
 !sys/omsy/
 !sys/omsy/**
 

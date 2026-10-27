@@ -14,7 +14,7 @@
 #include <sys/wait.h>
 #include <sys/time.h>
 #include <netinet/in.h>
-#include "common.h"
+#include "../../sys/include/omsy/common.h"
 
 #define PORT             8990
 #define IDLE_TIMEOUT_SEC 60

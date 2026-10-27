@@ -7,7 +7,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include "common.h"
+#include "../../sys/include/omsy/common.h"
 
 #define MAX_PIDS 256
 
