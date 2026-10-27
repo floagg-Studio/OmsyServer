@@ -1,23 +1,8 @@
 # OmsyServer
 
-Environnement serveur local (web, base de données, PHP, cache) **installé et piloté depuis un seul dossier**, sans toucher aux services du système.
+Un serveur local complet (Nginx, Apache, PHP, MySQL, Redis…) **installé et piloté depuis un seul dossier**, sans toucher aux services du système.
 
-OmsyServer fonctionne avec [OmsyServerStore](https://github.com/is-omini/OmsyServerStore) :
-
-- **OmsyServerStore** fournit les scripts qui compilent et installent chaque composant (Apache, Nginx, MySQL, PHP, Redis, OpenSSL…).
-- **OmsyServer** prépare l'environnement, lance l'installation et permet de **démarrer / arrêter** les services installés.
-
-> ⚠️ Projet en cours de développement : certaines parties sont encore incomplètes.
-
-## Contenu
-
-| Fichier | Rôle |
-|---|---|
-| `omsy.sh` | Prépare le système : dépendances, utilisateur `omsy`, sources, arborescence |
-| `install.sh` | Lance l'installation des composants depuis le dossier `store/` |
-| `store/` | Scripts d'installation des composants (voir OmsyServerStore) |
-| `systemcontroler.json` | Description des services : nom, binaires, commandes de démarrage et d'arrêt |
-| `omsy-stackctl.py` | Script Python qui démarre ou arrête les services décrits dans le JSON |
+> ⚠️ Projet en développement : certaines parties sont encore incomplètes.
 
 ## Systèmes supportés
 
@@ -27,64 +12,40 @@ OmsyServer fonctionne avec [OmsyServerStore](https://github.com/is-omini/OmsySer
 ## Installation
 
 ```bash
-git clone https://github.com/is-omini/OmsyServer.git
+git clone https://github.com/floagg-studio/OmsyServer.git
 cd OmsyServer
+sudo bash omsy-stable.sh
 ```
 
-1. **Définir le dossier d'installation.** Dans `omsy.sh` et `install.sh`, modifiez la variable `PATH_ROOT` (actuellement un chemin personnel : `/Users/julie/Documents/OmsyServer`) pour qu'elle pointe vers votre dossier.
-2. **Préparer le système :**
-   ```bash
-   sudo bash omsy.sh
-   ```
-   Ce script installe les dépendances de compilation, crée l'utilisateur et le groupe `omsy`, télécharge les bibliothèques sources (apr, apr-util, pcre2, nghttp2, zlib, extension PHP redis) et crée l'arborescence :
-   ```
-   PATH_ROOT/
-   ├── source/     (sources téléchargées)
-   ├── sys/        (bin, lib, module)
-   ├── share/      (config, logs, empty)
-   └── usr/
-   ```
-3. **Installer les composants :**
-   ```bash
-   bash install.sh
-   ```
-   Installe dans l'ordre : OpenSSL, MySQL, Redis, Nginx, Apache, PHP 8.5, phpMyAdmin.
+`omsy-stable.sh` prépare le système et installe les composants.
 
-> `install.sh` vérifie actuellement la présence de Homebrew : il est donc prévu pour macOS pour le moment.
+## Utilisation
 
-## Gestion des services
+Deux outils, tous deux configurés par `share/omsyctl/omsy.conf`.
 
-`omsy-stackctl.py` lit `systemcontroler.json` pour démarrer ou arrêter les services :
+### `omsyctl` : gérer les services
 
 ```bash
-python3 omsy-stackctl.py systemcontroler.json start mysql nginx phpfpm85
-python3 omsy-stackctl.py systemcontroler.json stop  mysql nginx phpfpm85
+omsyctl -c share/omsyctl/omsy.conf start  mysql nginx
+omsyctl -c share/omsyctl/omsy.conf stop   mysql nginx
+omsyctl -c share/omsyctl/omsy.conf status mysql nginx
 ```
 
-Le dossier racine est celui du script, ou la variable d'environnement `ROOT_PATH` si elle est définie.
+Chaque service est décrit par un fichier `<nom>.conf` avec : `label`, `shell`, `start`, `bins` et `stop`.
 
-### Services déclarés
+### `omsyd` : le démon
 
-| Nom | Service | Démarrage / arrêt |
-|---|---|---|
-| `mysql` | MySQL / MariaDB | ✅ |
-| `nginx` | Nginx | ✅ |
-| `apache` | Apache | ✅ |
-| `phpfpm85` | PHP-FPM 8.5 | ✅ |
-| `redis` | Redis | ✅ |
-| `vsftpd` | vsftpd (FTP) | ✅ |
-| `openssl` | OpenSSL | installation seulement |
-| `nodejs` | Node.js | installation seulement |
-| `postgresql` | PostgreSQL | à venir |
-| `docker` | Docker | à venir |
-| `ssh` | SSH | à venir |
+Écoute sur le port **8990** et relance automatiquement son processus en cas de plantage.
 
-Pour ajouter un service, ajoutez une entrée dans `systemcontroler.json` avec :
-- `sh` : le script d'installation
-- `label` : le nom affiché
-- `bins` : les binaires associés
-- `start` / `stop` : les commandes de démarrage et d'arrêt (`${root_path}` est remplacé par le dossier racine)
+```bash
+omsyd -c share/omsyctl/omsy.conf start    # lance en arrière-plan
+omsyd -c share/omsyctl/omsy.conf stop
+omsyd -c share/omsyctl/omsy.conf status
+omsyd -c share/omsyctl/omsy.conf run      # lance au premier plan
+```
+
+Sans commande, `omsyd` bascule entre démarrage et arrêt.
 
 ## Avertissement
 
-Ces scripts modifient le système (paquets, utilisateurs, fichiers). Lisez-les avant de les exécuter et testez-les d'abord sur une machine virtuelle ou un serveur de test.
+Ces scripts modifient le système (paquets, utilisateurs, fichiers). Lisez-les avant de les lancer et testez-les d'abord sur une machine virtuelle.
