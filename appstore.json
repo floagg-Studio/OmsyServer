@@ -1,0 +1,189 @@
+{
+	"mysql": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/mysql.sh",
+		"label": "MySQL / MariaDB",
+		"bins": [
+			"mysqld",
+			"mariadbd",
+			"mysql"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/mysqld",
+			"--defaults-file=/Users/julie/Documents/OmsyServer/share/config/mysql/my.cnf",
+			"--user=$USER"
+		],
+		"stop": [
+			[
+				"pkill",
+				"-TERM",
+				"mysqld_safe"
+			],
+			[
+				"/Users/julie/Documents/OmsyServer/sys/bin/mysqladmin",
+				"--socket=/Users/julie/Documents/OmsyServer/share/run/mysql.sock",
+				"-u",
+				"root",
+				"shutdown"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/fr/6/62/MySQL.svg"
+	},
+	"openssl": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/openssl.sh",
+		"label": "OpenSSL",
+		"bins": [
+			"openssl"
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/fr/6/62/MySQL.svg"
+	},
+	"nodejs": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/nodejs.sh",
+		"label": "NodeJS",
+		"bins": [
+			"node"
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/fr/6/62/MySQL.svg"
+	},
+	"apache": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/apache.sh",
+		"label": "Apache",
+		"bins": [
+			"apache2",
+			"httpd"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/apachectl",
+			"-f",
+			"/Users/julie/Documents/OmsyServer/share/config/apache/httpd.conf",
+			"-k",
+			"start"
+		],
+		"stop": [
+			[
+				"/Users/julie/Documents/OmsyServer/sys/bin/apachectl",
+				"-f",
+				"/Users/julie/Documents/OmsyServer/share/config/apache/httpd.conf",
+				"-k",
+				"stop"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/1/10/Apache_HTTP_server_logo_%282019-present%29.svg"
+	},
+	"nginx": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/nginx.sh",
+		"label": "Nginx",
+		"bins": [
+			"nginx"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/nginx",
+			"-c",
+			"/Users/julie/Documents/OmsyServer/share/config/nginx/nginx.conf"
+		],
+		"stop": [
+			[
+				"kill",
+				"-QUIT",
+				"$(cat /Users/julie/Documents/OmsyServer/share/run/nginx.pid)"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Nginx_logo.svg/960px-Nginx_logo.svg.png"
+	},
+	"redis": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/redis.sh",
+		"label": "Redis",
+		"bins": [
+			"redis-server",
+			"redis"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/redis-server",
+			"/Users/julie/Documents/OmsyServer/share/config/redis/redis.conf",
+			"--daemonize",
+			"no"
+		],
+		"stop": [
+			[
+				"/Users/julie/Documents/OmsyServer/sys/bin/redis-cli",
+				"shutdown"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/fr/thumb/6/6b/Redis_Logo.svg/3850px-Redis_Logo.svg.png"
+	},
+	"phpfpm85": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/php85.sh",
+		"label": "PHP-FPM85",
+		"bins": [
+			"php-fpm",
+			"php-fpm85",
+			"php7.4-fpm",
+			"php8.1-fpm",
+			"php8.2-fpm",
+			"php8.3-fpm"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/php-fpm85",
+			"--fpm-config",
+			"/Users/julie/Documents/OmsyServer/share/config/php/php-fpm85.conf"
+		],
+		"stop": [
+			[
+				"kill",
+				"$(cat /Users/julie/Documents/OmsyServer/share/run/php-fpm85.pid)"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/PHP-logo.svg/3850px-PHP-logo.svg.png"
+	},
+	"postgresql": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/postgresql.sh",
+		"label": "PostgreSQL",
+		"bins": [
+			"postgres",
+			"postgresql"
+		],
+		"start": [],
+		"stop": [],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Postgresql_elephant.svg/960px-Postgresql_elephant.svg.png"
+	},
+	"docker": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/docker.sh",
+		"label": "Docker",
+		"bins": [
+			"dockerd",
+			"docker"
+		],
+		"start": [],
+		"stop": [],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Docker_%28container_engine%29_logo.svg/960px-Docker_%28container_engine%29_logo.svg.png"
+	},
+	"ssh": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/openssh.sh",
+		"label": "SSH",
+		"bins": [
+			"sshd",
+			"ssh"
+		],
+		"start": [],
+		"stop": [],
+		"icon": "https://avatars.githubusercontent.com/u/2387206?s=280&v=4"
+	},
+	"vsftpd": {
+		"sh": "/Users/julie/Documents/OmsyServer/src/services/vsftpd.sh",
+		"label": "vsftpd",
+		"bins": [
+			"vsftpd"
+		],
+		"start": [
+			"/Users/julie/Documents/OmsyServer/sys/bin/vsftpd",
+			"/Users/julie/Documents/OmsyServer/share/config/vsftpd/vsftpd.conf"
+		],
+		"stop": [
+			[
+				"pkill",
+				"-TERM",
+				"vsftpd"
+			]
+		],
+		"icon": "https://upload.wikimedia.org/wikipedia/commons/4/47/Ftp_logo.svg"
+	}
+}

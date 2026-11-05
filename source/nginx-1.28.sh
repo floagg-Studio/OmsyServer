@@ -18,7 +18,8 @@ dirs=(
 	"$PATH_ROOT/share/run/nginx"
 	$LOGDIR
 	$CONFDIR
-	"$PATH_ROOT/share/config/nginx/sites"
+	"$PATH_ROOT/share/config/nginx/sites",
+	"$PATH_ROOT/share/config/nginx/upstreams",
 )
 mkdir -p "${dirs[@]}"
 
@@ -185,7 +186,8 @@ server {
     server_name default.com www.default.com;
 
     location / {
-        proxy_pass http://127.0.0.1:8080;
+        proxy_pass http://default_com_backend;
+		proxy_next_upstream error timeout http_502 http_503;
     }
 }
 
@@ -209,5 +211,14 @@ server {
     location / {
         proxy_pass http://127.0.0.1:8080;
     }
+}
+EOF
+
+
+cat > "${CONFDIR}/upstreams/default.com.conf" <<EOF
+upstream default_com_backend {
+    least_conn;
+    server 127.0.0.1:8080 max_fails=3 fail_timeout=10s;
+    keepalive 16;
 }
 EOF

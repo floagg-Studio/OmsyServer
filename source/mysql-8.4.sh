@@ -26,7 +26,7 @@ PREFIX="$SYSTEM_DIR"
 DATADIR="$SHARE_DIR/data"
 LOGDIR="$LOG_DIR/mysql"
 CONFDIR="$CONFIG_DIR/mysql"
-MYSQL_ROOT_PASS="OmsyRoot$($BINARY_DIR/openssl rand -hex 8)"
+MYSQL_ROOT_PASS="OmsyRoot" # "$($BINARY_DIR/openssl rand -hex 8)"
 
 # Vérification de l'installation OpenSSL
 for f in \
@@ -149,9 +149,13 @@ sudo env DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH" "$BINARY_DIR/openssl" req -x509 
 		exit 1
 	}
 
+echo "Okay"
+
 sudo chmod 644 "$SHARE_DIR"/ssl/certs/*.crt
 sudo chmod 600 "$SHARE_DIR"/ssl/private/*.key
 sudo chown omsy:omsy "$SHARE_DIR"/ssl/certs/*.crt "$SHARE_DIR"/ssl/private/*.key
+
+echo "Okay 2"
 
 cat > "${CONFDIR}/my.cnf" <<EOF
 [mysqld]
@@ -198,22 +202,30 @@ socket      = $RUN_DIR/mysql.sock
 default-character-set = utf8mb4
 EOF
 
+echo "Okay 3"
+
 sudo chown -R omsy:omsy "$DATADIR" "$LOGDIR"
+
+echo "Okay 5"
 sudo -u omsy env DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH" "$BINARY_DIR/mysqld" \
 	--defaults-file="${CONFDIR}/my.cnf" \
 	--initialize-insecure \
 	--user=omsy
+
+echo "Okay 6"
 
 sudo -u omsy env DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH" "$BINARY_DIR/mysqld" \
 	--defaults-file="${CONFDIR}/my.cnf" \
 	--user=omsy \
 	--daemonize
 
+echo "Okay 4"
+
 sleep 6
 
 "$BINARY_DIR/mysql" --socket="$RUN_DIR/mysql.sock" -u root \
 	-e "SELECT VERSION();" || echo "MySQL ne répond pas après démarrage."
-
+echo "Okay 6"
 "$BINARY_DIR/mysql" \
 	--socket="$RUN_DIR/mysql.sock" \
 	--user=root <<SQL
@@ -226,6 +238,8 @@ CREATE DATABASE IF NOT EXISTS phpmyadmin CHARACTER SET utf8mb4 COLLATE utf8mb4_u
 FLUSH PRIVILEGES;
 SQL
 
+echo "Okay 7"
+
 "$BINARY_DIR/mysqladmin" \
 	--socket="$RUN_DIR/mysql.sock" \
 	--user=root \
@@ -233,9 +247,13 @@ SQL
 	shutdown || true
 sleep 3
 
+echo "Okay 8"
+
 CRED_FILE="${CONFDIR}/.mysql_root_pass"
 echo "$MYSQL_ROOT_PASS" > "$CRED_FILE"
 chmod 600 "$CRED_FILE"
 sudo chown omsy:omsy "$CRED_FILE"
+
+echo "Okay 9"
 
 echo "✅ MySQL installé. Mot de passe root dans : $CRED_FILE"

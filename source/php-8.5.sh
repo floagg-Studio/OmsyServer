@@ -227,6 +227,7 @@ php_admin_value[error_log]  = $PATH_ROOT/share/logs/php/php85-fpm-error.log
 php_admin_flag[log_errors]  = on
 EOF
 
+REDIS_PASSWORD=$(cat "$PATH_ROOT/share/config/redis/redis_password.txt")
 cd "$PATH_ROOT/source/predis"
 "$PATH_ROOT/sys/bin/phpize85"
 ./configure --with-php-config="${PATH_ROOT}/sys/bin/php-config85"

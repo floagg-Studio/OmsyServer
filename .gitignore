@@ -42,3 +42,15 @@ sys/README.router
 sys/LICENSE
 sys/LICENSE-test
 sys/LICENSE.router
+/source/apache
+/source/mysql
+/source/nghttp2
+/source/nginx/auto/cc
+/source/nginx
+/source/openssl
+/source/pcre2
+/source/php85
+/source/phpmyadmin
+/source/predis
+/source/redis
+/source/zlib

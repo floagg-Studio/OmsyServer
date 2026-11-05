@@ -27,7 +27,7 @@ find ./source -type f -name "*.sh" ! -name "omsy-stable.sh" -exec sed "${SED_INP
 	-e "s|PATH_ROOT='/omsy'|PATH_ROOT='$PATH_ROOT'|g" {} +
 
 echo "Démarrage de l'installation"
-sh "$SOURCE/omsy-0.1.sh"
+sh "$SOURCE/omsy-0.2.sh"
 
 echo "Installation du serveur de base"
 sh "$SOURCE/openssl-3.5.sh"
@@ -39,6 +39,7 @@ sh "$SOURCE/redis-7.2.sh"
 echo "Installation des serveurs web"
 sh "$SOURCE/nginx-1.28.sh"
 sh "$SOURCE/apache-2.4.sh"
+
 
 echo "Création de fichier pour omsyctl"
 
@@ -96,8 +97,12 @@ EOF
 echo "Installation des extensions de code"
 sh "$SOURCE/php-8.5.sh"
 
+sh "$SOURCE/phpmyadmin.sh"
+
 echo "Finalisation de l'installation"
 sh "$SOURCE/omsyctl-0.1.sh"
 
 echo "Finalisation de l'installation"
 # sh "$SOURCE/clean.sh"
+
+chown -R omsy:omsy "$PATH_ROOT"
