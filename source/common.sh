@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-PATH_ROOT="/Users/julie/Documents/OmsyServer"
+PATH_ROOT="/Omsy"
 SOURCE_DIR="$PATH_ROOT/source"
 
 SYSTEM_DIR="$PATH_ROOT/sys"

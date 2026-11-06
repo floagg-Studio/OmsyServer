@@ -47,7 +47,7 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
 		sudo dscl . -create /Groups/omsy PrimaryGroupID 550
 	fi
 
-elif [[ -f /etc/os-release && $(grep -c "Ubuntu" /etc/os-release) -gt 0 ]]; then
+elif [[ -f /etc/os-release ]] && ( grep -Eq '^ID=.*(ubuntu|debian)' /etc/os-release || grep -Eq '^ID_LIKE=.*(ubuntu|debian)' /etc/os-release ); then
 	echo "Installation pour Ubuntu"
 
 	apt-get update -y
