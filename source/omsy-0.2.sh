@@ -51,11 +51,11 @@ elif [[ -f /etc/os-release ]] && ( grep -Eq '^ID=.*(ubuntu|debian)' /etc/os-rele
 	echo "Installation pour Ubuntu"
 
 	apt-get update -y
-	apt-get install -y \
+	sudo apt-get install -y \
 		build-essential gcc g++ make cmake ninja-build \
 		pkg-config autoconf automake libtool \
 		bison flex re2c \
-		libncurses5-dev libncursesw5-dev \
+		libncurses-dev \
 		libreadline-dev \
 		libssl-dev \
 		zlib1g-dev \
@@ -63,8 +63,7 @@ elif [[ -f /etc/os-release ]] && ( grep -Eq '^ID=.*(ubuntu|debian)' /etc/os-rele
 		libxslt1-dev \
 		libcurl4-openssl-dev \
 		libpng-dev \
-		libjpeg-dev \
-		libfreetype6-dev \
+		libfreetype-dev \
 		libwebp-dev \
 		libavif-dev \
 		libonig-dev \
@@ -91,7 +90,6 @@ elif [[ -f /etc/os-release ]] && ( grep -Eq '^ID=.*(ubuntu|debian)' /etc/os-rele
 		libgd-dev \
 		libmaxminddb-dev \
 		libpcre2-dev \
-		libpcre3-dev \
 		libexpat1-dev \
 		libapr1-dev \
 		libaprutil1-dev \
@@ -106,6 +104,7 @@ elif [[ -f /etc/os-release ]] && ( grep -Eq '^ID=.*(ubuntu|debian)' /etc/os-rele
 		apt-transport-https \
 		gnupg2 \
 		patchelf
+
 
 	if ! getent group omsy >/dev/null; then
 		groupadd --system omsy
